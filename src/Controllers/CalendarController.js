@@ -29,35 +29,58 @@ function buildDates(year, month, action = 'current') {
 
 function buildCalendar(year, month) {
 
+    const now = dayjs()
+
     const firstDay = dayjs().set('year', year).set('month', month).set('date', 0)
     const daysInMonth = dayjs().set('year', year).set('month', month + 1).set('date', 0).date()
     const dayOfWeek = firstDay.day()
-    const today = parseInt(dayjs().set('year', year).set('month', month).format('DD'))
+    const todayDate = dayjs().set('year', year).set('month', month)
+    const today = parseInt(todayDate.format('DD'))
 
     let calendar = []
 
     for (let i = 0; i <= dayOfWeek; i++) {
         calendar.push({
-            currentMonth: false,
             currentDay: false,
+            currentMonth: false,
+            currentYear: todayDate.year() === now.year(),
             text: '-',
+            fullDateText: null,
+            timeSlots: null,
         })
     }
 
     for (let i = 0; i < daysInMonth; i++) {
         const next = i + 1
         calendar.push({
-            currentMonth: true,
             currentDay: next === today,
+            currentMonth: todayDate.month() === now.month(),
+            currentYear: todayDate.year() === now.year(),
             text: next.toString(),
+            timeSlots: [
+                {text: '9 AM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 9 AM'},
+                {text: '10 AM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 10 AM'},
+                {text: '11 AM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 11 AM'},
+
+                {text: '12 PM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 12 PM'},
+                {text: '1 PM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 1 PM'},
+                {text: '2 PM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 2 PM'},
+
+                {text: '3 PM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 3 PM'},
+                {text: '4 PM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 4 PM'},
+                {text: '5 PM', fullText: todayDate.set('date', next).format('DD-MMM-YYYY') + ' 5 PM'},
+            ]
         })
     }
 
     while (calendar.length % 7 !== 0) {
         calendar.push({
-            currentMonth: false,
             currentDay: false,
+            currentMonth: false,
+            currentYear: todayDate.year() === now.year(),
             text: '-',
+            fullDateText: null,
+            timeSlots: null,
         })
     }
 
